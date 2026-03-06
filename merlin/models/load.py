@@ -79,12 +79,16 @@ class Merlin(nn.Module):
         model = model_builder(**kwargs)
 
         print(f"Loading checkpoint for '{self.task}' task from {checkpoint_path}")
-        state_dict = torch.load(checkpoint_path, map_location="cpu")
+        state_dict = torch.load(checkpoint_path, map_location="cpu", mmap=True)
 
         if self.task == "five_year_disease_prediction":
             model.encode_image.i3_resnet.load_state_dict(state_dict, strict=True)
         else:
             model.load_state_dict(state_dict)
+
+        del state_dict
+        import gc
+        gc.collect()
 
         return model
 

@@ -82,6 +82,7 @@ class TextDecoder(nn.Module):
         self.text_decoder = AutoModelForCausalLM.from_pretrained(
             "StanfordAIMI/RadLLaMA-7b",
             cache_dir="./checkpoints",
+            torch_dtype=torch.float16,
         )
         self.text_decoder.gradient_checkpointing_enable()
 
@@ -171,16 +172,19 @@ class Clip3DForTextGeneration(nn.Module):
         for param in self.encode_image.parameters():
             param.requires_grad = False
 
+    def _target_dtype(self):
+        return next(self.decode_text.text_decoder.parameters()).dtype
+
     def forward(self, image, text):
         with torch.no_grad():
             image_features = self.encode_image(image)
-            image_features = self.adapter(image_features)
+            image_features = self.adapter(image_features).to(self._target_dtype())
             loss = self.decode_text(image_features, text)
             return loss
 
     @torch.no_grad()
     def generate(self, image, text_labels, **kwargs):
         image_features = self.encode_image(image)
-        image_features = self.adapter(image_features)
+        image_features = self.adapter(image_features).to(self._target_dtype())
         texts = self.decode_text.generate(image_features, text_labels, **kwargs)
         return texts

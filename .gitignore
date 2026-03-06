@@ -4,3 +4,8 @@
 **/*.egg-info/
 **/checkpoints/
 dist/*
+atlas_data/
+ct_data/
+merlin_eval_results/
+merlin_inference_results/
+*.zip
