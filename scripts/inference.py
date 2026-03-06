@@ -60,10 +60,11 @@ def get_merlin_model(mode: str):
         td = model.model.decode_text
         td.text_decoder = td.text_decoder.merge_and_unload()
         td.text_decoder.gradient_checkpointing_disable()
+        td.text_decoder = td.text_decoder.float()
         td.text_decoder = torch.quantization.quantize_dynamic(
             td.text_decoder, {torch.nn.Linear}, dtype=torch.qint8
         )
-        print("[Merlin] Applied LoRA merge + gradient ckpt disable + INT8 quantization")
+        print("[Merlin] Applied LoRA merge + gradient ckpt disable + fp32 cast + INT8 quantization")
 
     _model_cache[mode] = model
     print(f"[Merlin] Model loaded")
