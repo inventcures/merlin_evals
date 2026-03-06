@@ -1,0 +1,12 @@
+merlin/models/checkpoints/
+*.pt
+*.bin
+*.safetensors
+*.gguf
+*.nii.gz
+atlas_data/
+ct_data/
+merlin_eval_results*/
+__pycache__/
+.git/
+.venv/

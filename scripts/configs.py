@@ -62,3 +62,46 @@ EXPECTED_METRIC_RANGES = {
     "BERTScore-F1": (0.82, 0.88),
     "RadGraph-F1": (0.20, 0.30),
 }
+
+WHOLE_REPORT_PROMPT = "Generate a comprehensive radiology report for this CT scan###\n"
+
+GENERATION_CONFIGS = {
+    "baseline": {
+        "mode": "per_organ",
+        "do_sample": False,
+        "num_beams": 1,
+        "repetition_penalty": 1.2,
+        "max_new_tokens": 128,
+    },
+    "whole_report_greedy": {
+        "mode": "whole_report",
+        "do_sample": False,
+        "num_beams": 1,
+        "repetition_penalty": 1.2,
+        "max_new_tokens": 500,
+    },
+    "whole_report_sampling": {
+        "mode": "whole_report",
+        "do_sample": True,
+        "temperature": 0.7,
+        "top_p": 0.9,
+        "top_k": 50,
+        "repetition_penalty": 1.5,
+        "max_new_tokens": 500,
+    },
+    "per_organ_sampling": {
+        "mode": "per_organ",
+        "do_sample": True,
+        "temperature": 0.7,
+        "top_p": 0.9,
+        "repetition_penalty": 1.5,
+        "max_new_tokens": 128,
+    },
+    "per_organ_beam": {
+        "mode": "per_organ",
+        "do_sample": False,
+        "num_beams": 4,
+        "repetition_penalty": 1.5,
+        "max_new_tokens": 128,
+    },
+}
